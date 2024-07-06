@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acbf-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acbf-backend
+  template:
+    metadata:
+      labels:
+        app: acbf-backend
+    spec:
+      containers:
+      - name: acbf-backend
+        image: your-dockerhub-username/acbf-backend:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: FLASK_ENV
+          value: "development"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acbf-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acbf-frontend
+  template:
+    metadata:
+      labels:
+        app: acbf-frontend
+    spec:
+      containers:
+      - name: acbf-frontend
+        image: node:14
+        workingDir: /app
+        command: ["npm", "start"]
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - mountPath: /app
+          name: frontend-volume
+      volumes:
+      - name: frontend-volume
+        hostPath:
+          path: ./dapp/frontend
+          type: Directory
