@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: acbf-backend-service
+spec:
+  selector:
+    app: acbf-backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acbf-frontend-service
+spec:
+  selector:
+    app: acbf-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: LoadBalancer
