@@ -1,0 +1,6 @@
+frontend:
+  port: 3000
+
+backend:
+  port: 5000
+  infura_project_id: "YOUR_INFURA_PROJECT_ID"
