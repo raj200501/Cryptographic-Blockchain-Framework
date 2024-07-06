@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_USERNAME = credentials('dockerhub-username')
+        DOCKER_PASSWORD = credentials('dockerhub-password')
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'docker build -t your-dockerhub-username/acbf-backend:latest .'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'pytest'
+            }
+        }
+        stage('Push') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
+                        sh 'docker push your-dockerhub-username/acbf-backend:latest'
+                    }
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    sh 'kubectl apply -f deployment/kubernetes/deployment.yaml'
+                    sh 'kubectl apply -f deployment/kubernetes/service.yaml'
+                }
+            }
+        }
+    }
+}
