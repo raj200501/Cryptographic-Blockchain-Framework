@@ -1,6 +1,6 @@
 # 🚀 Advanced Cryptographic Blockchain Framework (ACBF)
 
-![ACBF Logo]([https://example.com/logo.png](https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=010))
+![ACBF Logo](https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=010)
 
 Welcome to the **Advanced Cryptographic Blockchain Framework (ACBF)**! This project is a cutting-edge, all-in-one solution for anyone looking to dive deep into the world of cryptography, blockchain technology, and decentralized applications (DApps). Whether you're a developer, researcher, or crypto enthusiast, ACBF is designed to provide you with the tools and resources to innovate and succeed in the crypto space.
 
