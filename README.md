@@ -1,121 +1,141 @@
 # 🚀 Advanced Cryptographic Blockchain Framework (ACBF)
 
-![ACBF Logo](https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=010)
+ACBF is a local-first, educational blockchain framework that bundles:
 
-Welcome to the **Advanced Cryptographic Blockchain Framework (ACBF)**! This project is a cutting-edge, all-in-one solution for anyone looking to dive deep into the world of cryptography, blockchain technology, and decentralized applications (DApps). Whether you're a developer, researcher, or crypto enthusiast, ACBF is designed to provide you with the tools and resources to innovate and succeed in the crypto space.
+- A deterministic blockchain simulation with proof-of-work mining.
+- Pure-Python AES/RSA/SHA-256 helpers for learning purposes.
+- A lightweight HTTP backend API with wallet, transaction, mining, and contract endpoints.
+- A React demo DApp (optional).
+- CI-ready verification scripts and documentation.
+
+> **Note:** This project is intentionally self-contained and does not connect to
+> public chains. All blockchain interactions are simulated locally to keep the
+> developer experience reproducible.
 
 ## 🌟 Features
 
-- **Advanced Cryptography**: Implementations of symmetric (AES) and asymmetric (RSA) encryption, along with secure hash functions (SHA-256).
-- **Blockchain Interactions**: Seamlessly interact with blockchain networks, including balance checking, transaction sending, and smart contract management.
-- **Smart Contracts**: Develop, deploy, and interact with smart contracts using Solidity. Includes sample contracts and comprehensive guides.
-- **Decentralized Applications (DApps)**: Full-stack DApp development with a React.js frontend and Flask backend.
-- **Scalability & Performance**: Optimized for high performance and scalability, suitable for both small-scale projects and enterprise-level applications.
-- **CI/CD Integration**: Continuous integration and deployment with Docker, Kubernetes, GitHub Actions, Jenkins, and Azure Pipelines.
+- **Cryptography Toolkit**: AES-128 CBC, RSA (toy implementation), and SHA-256 utilities.
+- **Blockchain Simulation**: Mine blocks, submit transactions, and inspect chain state.
+- **Metrics Reporting**: Chain metrics via CLI or API.
+- **Smart Contract Simulation**: Deploy and call in-memory token + storage contracts.
+- **Backend API**: Standard-library HTTP service exposing JSON endpoints.
+- **CLI**: Run blockchain + crypto workflows from the command line.
+- **Optional DApp**: React frontend that exercises the backend API.
+- **CI/CD Ready**: Deterministic verification script and GitHub Actions workflow.
 
-## 📈 Why ACBF?
+## 🔧 Prerequisites
 
-- **State-of-the-Art Technology**: Stay ahead with the latest in cryptographic and blockchain technologies.
-- **Developer Friendly**: Clean, modular codebase with extensive documentation and examples.
-- **Community Driven**: Join a growing community of developers and crypto enthusiasts. Share ideas, get support, and contribute to the project.
-- **Secure & Reliable**: Built with security and reliability at its core, ensuring your projects are robust and secure.
+- Python 3.8+
+- Node.js 16+ (only required for the optional frontend)
+- Docker (optional for containerized runs)
 
-## 🔧 Getting Started
+## ✅ Verified Quickstart (commands executed)
 
-### Prerequisites
+```sh
+python -m acbf.cli crypto "hello ACBF"
+```
 
-- Python 3.6 or higher
-- Node.js and npm
-- Docker (optional)
-- Kubernetes (optional)
+## 📦 Installation
 
-### Installation
+ACBF has no runtime dependencies outside the Python standard library. To run
+verification tests, install the test requirements:
 
-1. **Clone the repository:**
+```sh
+python -m pip install -r requirements.txt
+```
 
-    ```sh
-    git clone https://github.com/yourusername/ACBF.git
-    cd ACBF
-    ```
+## ▶️ Running the Backend API
 
-2. **Install Python dependencies:**
+```sh
+./scripts/run.sh
+```
 
-    ```sh
-    pip install -r requirements.txt
-    ```
+The API starts on `http://127.0.0.1:5000` by default. Example requests:
 
-3. **Install frontend dependencies:**
+```sh
+curl http://127.0.0.1:5000/health
+curl -X POST http://127.0.0.1:5000/wallet
+curl -X POST http://127.0.0.1:5000/transaction \
+  -H "Content-Type: application/json" \
+  -d '{"sender":"alice","recipient":"bob","amount":10}'
+curl http://127.0.0.1:5000/metrics
+```
 
-    ```sh
-    cd dapp/frontend
-    npm install
-    cd ../..
-    ```
+## 🧰 CLI Usage
 
-4. **Compile smart contracts:**
+```sh
+python -m acbf.cli wallet
+python -m acbf.cli transfer alice bob 5
+python -m acbf.cli mine miner-1
+python -m acbf.cli metrics
+python -m acbf.cli chain
+```
 
-    ```sh
-    python smart_contracts/compile.py
-    ```
+## 🧪 Verification (CI Entry Point)
 
-5. **Deploy smart contracts:**
+```sh
+./scripts/verify.sh
+```
 
-    ```sh
-    python smart_contracts/deploy.py
-    ```
+The script installs `pytest` if needed, runs unit tests, and executes API
+integration checks. GitHub Actions runs the same command on `push` and
+`pull_request`.
 
-### Running the Project
+## 🔗 Smart Contracts
 
-1. **Run the backend:**
+Contracts are simulated locally (no EVM). You can deploy and call contracts via
+API or CLI. Solidity samples are included under `smart_contracts/contracts/`.
+The `smart_contracts/compile.py` script simulates compilation without requiring
+`solc`.
 
-    ```sh
-    cd dapp/backend
-    flask run
-    ```
+## 🖥️ Optional React DApp
 
-2. **Run the frontend:**
+```sh
+cd dapp/frontend
+npm install
+npm start
+```
 
-    ```sh
-    cd dapp/frontend
-    npm start
-    ```
+The UI expects the backend at `http://127.0.0.1:5000`. Override with
+`REACT_APP_BACKEND_URL` if needed.
 
-### Docker Deployment
+## 🐳 Docker
 
-1. **Build and run with Docker Compose:**
+```sh
+docker-compose -f deployment/docker/docker-compose.yaml up --build
+```
 
-    ```sh
-    docker-compose up --build
-    ```
+## ☸️ Kubernetes
 
-### Kubernetes Deployment
-
-1. **Apply Kubernetes configurations:**
-
-    ```sh
-    kubectl apply -f deployment/kubernetes/deployment.yaml
-    kubectl apply -f deployment/kubernetes/service.yaml
-    ```
+```sh
+kubectl apply -f deployment/kubernetes/deployment.yaml
+kubectl apply -f deployment/kubernetes/service.yaml
+```
 
 ## 📚 Documentation
 
 - [Architecture](docs/architecture.md)
 - [Cryptography](docs/cryptography.md)
-- [Blockchain](docs/blockchain.md)
+- [Blockchain Simulation](docs/blockchain.md)
 - [Smart Contracts](docs/smart_contracts.md)
 - [DApp](docs/dapp.md)
+- [CLI Guide](docs/cli.md)
+- [API Reference](docs/api.md)
+- [Testing](docs/testing.md)
+- [Troubleshooting](docs/troubleshooting.md)
 
-## 🌐 Community
+## 📦 Examples
 
-Join our [Discord](https://discord.gg/example) and follow us on [Twitter](https://twitter.com/example) to stay updated and connect with other developers and enthusiasts.
+```sh
+python examples/demo_workflow.py
+python examples/metrics_report.py
+```
 
-## 🤝 Contributing
+## ✅ Verified Verification (commands executed)
 
-We welcome contributions! Please see our [contributing guidelines](CONTRIBUTING.md) for more information.
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+```sh
+./scripts/verify.sh
+```
 
 ---
 

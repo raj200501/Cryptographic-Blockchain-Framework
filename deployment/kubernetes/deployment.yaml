@@ -18,8 +18,8 @@ spec:
         ports:
         - containerPort: 5000
         env:
-        - name: FLASK_ENV
-          value: "development"
+        - name: ACBF_BACKEND_HOST
+          value: "0.0.0.0"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -37,11 +37,14 @@ spec:
     spec:
       containers:
       - name: acbf-frontend
-        image: node:14
+        image: node:18
         workingDir: /app
-        command: ["npm", "start"]
+        command: ["sh", "-c", "npm install && npm start"]
         ports:
         - containerPort: 3000
+        env:
+        - name: REACT_APP_BACKEND_URL
+          value: "http://acbf-backend:5000"
         volumeMounts:
         - mountPath: /app
           name: frontend-volume

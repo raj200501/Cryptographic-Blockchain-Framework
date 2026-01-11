@@ -6,13 +6,15 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - FLASK_ENV=development
+      - ACBF_BACKEND_HOST=0.0.0.0
 
   frontend:
-    image: node:14
+    image: node:18
     working_dir: /app
     volumes:
       - ./dapp/frontend:/app
-    command: ["npm", "start"]
+    command: ["sh", "-c", "npm install && npm start"]
     ports:
       - "3000:3000"
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:5000

@@ -1,2 +1,1 @@
-Flask==2.0.1
-web3==5.24.0
+# Standard-library only backend; no dependencies required.

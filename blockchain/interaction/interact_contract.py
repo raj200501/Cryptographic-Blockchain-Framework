@@ -1,31 +1,18 @@
-from web3 import Web3
+from acbf.config import load_config
+from acbf.service import BlockchainService
 
-def interact_with_contract(contract_address, abi, private_key):
-    w3 = Web3(Web3.HTTPProvider('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID'))
-    from_address = w3.eth.account.privateKeyToAccount(private_key).address
-    contract = w3.eth.contract(address=contract_address, abi=abi)
-    
-    # Call a function (read-only)
-    stored_data = contract.functions.get().call()
-    print(f"Stored Data: {stored_data}")
 
-    # Send a transaction (modifies state)
-    nonce = w3.eth.get_transaction_count(from_address)
-    transaction = contract.functions.set(123).buildTransaction({
-        'chainId': 1,
-        'gas': 2000000,
-        'gasPrice': w3.toWei('50', 'gwei'),
-        'nonce': nonce,
-    })
-    signed_txn = w3.eth.account.sign_transaction(transaction, private_key)
-    tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
-    print(f"Transaction Hash: {w3.toHex(tx_hash)}")
+def interact_contract(address: str, sender: str, method: str, args):
+    config = load_config()
+    service = BlockchainService(config.blockchain)
+    return service.call_contract(address, sender, method, args)
+
 
 def main():
-    contract_address = '0xYourContractAddress'
-    abi = [...]  # Contract ABI
-    private_key = '0xYourPrivateKey'
-    interact_with_contract(contract_address, abi, private_key)
+    contract = "demo-contract"
+    result = interact_contract(contract, "demo-sender", "balance_of", ["demo-sender"])
+    print(f"Contract result: {result}")
+
 
 if __name__ == "__main__":
     main()

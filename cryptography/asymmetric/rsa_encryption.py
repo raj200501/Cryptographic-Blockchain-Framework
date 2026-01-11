@@ -1,30 +1,21 @@
-from cryptography.hazmat.primitives.asymmetric import rsa, padding
-from cryptography.hazmat.primitives import serialization, hashes
+from acbf.crypto.rsa import generate_rsa_keypair, rsa_encrypt
+
 
 def generate_keys():
-    private_key = rsa.generate_private_key(
-        public_exponent=65537,
-        key_size=2048,
-    )
-    public_key = private_key.public_key()
-    return private_key, public_key
+    keypair = generate_rsa_keypair()
+    return keypair.private_key, keypair.public_key
+
 
 def encrypt_rsa(public_key, plaintext):
-    ciphertext = public_key.encrypt(
-        plaintext,
-        padding.OAEP(
-            mgf=padding.MGF1(algorithm=hashes.SHA256()),
-            algorithm=hashes.SHA256(),
-            label=None
-        )
-    )
-    return ciphertext
+    return rsa_encrypt(public_key, plaintext)
+
 
 def main():
-    private_key, public_key = generate_keys()
+    _, public_key = generate_keys()
     plaintext = b"This is a secret message"
     ciphertext = encrypt_rsa(public_key, plaintext)
-    print(f"Ciphertext: {ciphertext}")
+    print(f"Ciphertext: {ciphertext.hex()}")
+
 
 if __name__ == "__main__":
     main()

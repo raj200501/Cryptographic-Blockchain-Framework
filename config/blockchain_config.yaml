@@ -1,5 +1,3 @@
-infura_project_id: "YOUR_INFURA_PROJECT_ID"
-private_key: "YOUR_PRIVATE_KEY"
-network: "mainnet"  # or "ropsten", "rinkeby", etc.
-gas: 2000000
-gas_price: "50 gwei"
+chain_id: "acbf-local"
+difficulty: 3
+mining_reward: 50
