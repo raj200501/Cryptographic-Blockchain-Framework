@@ -1,21 +1,19 @@
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.primitives import padding
-from cryptography.hazmat.backends import default_backend
+from acbf.crypto.aes import AESCipher
 
-def decrypt_aes(key, ciphertext):
-    iv = ciphertext[:16]
-    cipher = Cipher(algorithms.AES(key), modes.CFB(iv), backend=default_backend())
-    decryptor = cipher.decryptor()
-    padded_data = decryptor.update(ciphertext[16:]) + decryptor.finalize()
-    unpadder = padding.PKCS7(128).unpadder()
-    plaintext = unpadder.update(padded_data) + unpadder.finalize()
-    return plaintext
+
+def decrypt_aes(key, payload):
+    cipher = AESCipher(key)
+    return cipher.decrypt_bytes(payload)
+
 
 def main():
-    key = os.urandom(32)
-    ciphertext = b"\x00\x00..."  # Example ciphertext
-    plaintext = decrypt_aes(key, ciphertext)
-    print(f"Plaintext: {plaintext}")
+    key = AESCipher.generate_key()
+    plaintext = b"This is a secret message"
+    cipher = AESCipher(key)
+    payload = cipher.encrypt_bytes(plaintext)
+    recovered = decrypt_aes(key, payload)
+    print(f"Recovered: {recovered.decode('utf-8')}")
+
 
 if __name__ == "__main__":
     main()

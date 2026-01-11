@@ -1,14 +1,18 @@
-from web3 import Web3
+from acbf.config import load_config
+from acbf.service import BlockchainService
 
-def get_balance(address):
-    w3 = Web3(Web3.HTTPProvider('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID'))
-    balance = w3.eth.get_balance(address)
-    return w3.fromWei(balance, 'ether')
+
+def get_balance(address: str) -> float:
+    config = load_config()
+    service = BlockchainService(config.blockchain)
+    return service.get_balance(address)
+
 
 def main():
-    address = '0xYourEthereumAddress'
+    address = "demo-address"
     balance = get_balance(address)
-    print(f"Balance: {balance} ETH")
+    print(f"Balance: {balance} ACBF")
+
 
 if __name__ == "__main__":
     main()

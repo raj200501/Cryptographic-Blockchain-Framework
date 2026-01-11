@@ -1,27 +1,44 @@
-import React, { useState } from 'react';
-import Web3 from 'web3';
+import React, { useState } from "react";
 
-function Wallet() {
-  const [account, setAccount] = useState('');
-  const [balance, setBalance] = useState('');
+function Wallet({ backendUrl }) {
+  const [wallet, setWallet] = useState(null);
+  const [balance, setBalance] = useState(0);
+  const [status, setStatus] = useState("Idle");
 
-  async function loadWeb3() {
-    if (window.ethereum) {
-      const web3 = new Web3(window.ethereum);
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      setAccount(accounts[0]);
-      const balance = await web3.eth.getBalance(accounts[0]);
-      setBalance(web3.utils.fromWei(balance, 'ether'));
-    } else {
-      alert('Please install MetaMask!');
-    }
-  }
+  const createWallet = async () => {
+    setStatus("Creating wallet...");
+    const response = await fetch(`${backendUrl}/wallet`, { method: "POST" });
+    const data = await response.json();
+    setWallet(data);
+    setStatus("Wallet created");
+  };
+
+  const refreshBalance = async () => {
+    if (!wallet) return;
+    const response = await fetch(`${backendUrl}/balance?address=${wallet.address}`);
+    const data = await response.json();
+    setBalance(data.balance);
+    setStatus("Balance refreshed");
+  };
 
   return (
     <div className="wallet">
-      <button onClick={loadWeb3}>Connect Wallet</button>
-      <p>Account: {account}</p>
-      <p>Balance: {balance} ETH</p>
+      <button onClick={createWallet}>Create Wallet</button>
+      {wallet && (
+        <div className="wallet-details">
+          <p>
+            <strong>Address:</strong> {wallet.address}
+          </p>
+          <p>
+            <strong>Secret:</strong> {wallet.secret}
+          </p>
+          <button onClick={refreshBalance}>Refresh Balance</button>
+          <p>
+            <strong>Balance:</strong> {balance}
+          </p>
+        </div>
+      )}
+      <p className="wallet-status">Status: {status}</p>
     </div>
   );
 }
